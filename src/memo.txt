@@ -401,3 +401,31 @@ useState와 비슷한 느낌으로 withState 함수를 사용해서 enhance라�
 컴포넌트를 만들 때 enhance로 감싸주는 원하는 값과 함수를 props를 통하여 사용 할 수 있다.
 
 
+1. mapStateToProps 의 두번째 파라미터 ownProps
+mapStateToProps에서는 두번째 파라미터 ownProps를 받아올 수 있는데, 이 파라미터는 생략해도 되는 파라미터다.
+이 값은 컨테이너 컴포넌트를 렌더링 할 때 직접 넣어주는 props를 가르킨다.
+<CounterContainer myValue={1} /> 이라고 하면 { myValue: 1 } 값이 ownProps가 된다.
+
+↓이 두번째 파라미터는 아래와 같은 용도로 사용 할 수 있다
+const mapStateToProps = (state, ownProps) => ({
+  todo: state.todos[ownProps.id]
+})
+리덕스에서 어떤 상태를 조회 할 지 설정하는 과정에서 현재 받아온 props에 따라 다른 상태를 조회 할 수 있다.
+
+2. connect 의 3번째 파라미터 mergeProps
+mergeProps는 connect 함수의 세번째 파라미터이며, 생략해도 되는 파라미터다. 이 파라미터는 컴포넌트가 싫제로 전달받게될 props를 정의한다.
+(stateProps, dispatchProps, ownProps) => Object
+이 함수를 따로 지정하지 않으면 결과는 { ...ownProps, ...stateProps, ...dispatchProps }다. (쓸일이 사실상 없다고 한다.)
+
+3. connect의 4번째 파라미터 options
+connect 함수를 사용 할 때 이 컨테이너 컴포넌트가 어떻게 동작할지에 대한 옵션을 4번째 파라미터를 통해 설정 할 수 있다.
+이는 생략해도 되는 파라미터로, 이 옵션들은 따로 커스터마이징하게 되는 일이 별로 없다.
+자세한 내용은 좌측 의 링크를 통해서 확인하자 → https://react-redux.js.org/api/connect#options-object
+이 옵션을 통해서 Context 커스터마이징, 최적화를 위한 비교 작업 커스터마이징 및 ref 관련 작업을 할 수 있다.
+
+※ 참고내용
+https://react-redux.js.org/using-react-redux/connect-mapstate 에 따르면mapStateToProps 는 스토어 상태가 변할 때마다 호출된다고 한다.
+https://react-redux.js.org/using-react-redux/connect-mapdispatch#defining-the-mapdispatchtoprops-function-with-bindactioncreators 에 따르면
+mapDispatchToProps 는 bind된 개별 액션들을 dispatch할 때마다 호출된다.
+
+
